@@ -12,10 +12,15 @@ import { getActiveCategories } from "@/lib/data/categories";
 import { getCatalogProducts } from "@/lib/data/products";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import { getDictionary, getLocale } from "@/i18n/server";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const dict = await getDictionary();
-  return { title: dict.products.title };
+  const currentLocale = await getLocale();
+  return {
+    title: dict.products.title,
+    alternates: localeAlternates("/products", currentLocale),
+  };
 }
 
 export default async function ProductsPage(props: PageProps<"/[locale]/products">) {

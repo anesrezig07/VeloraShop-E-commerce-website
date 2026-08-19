@@ -46,7 +46,9 @@ export function formatEstimatedDelivery(
   locale: Locale = "fr",
 ): string {
   if (min === max) {
-    return locale === "ar" ? `${min} يوم` : `${min} jour${min > 1 ? "s" : ""}`;
+    return locale === "ar"
+      ? `${min} ${min === 1 ? "يوم" : "أيام"}`
+      : `${min} jour${min > 1 ? "s" : ""}`;
   }
   return locale === "ar"
     ? `${min} إلى ${max} أيام`

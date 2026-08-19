@@ -10,6 +10,7 @@ import { getCategoryBySlug } from "@/lib/data/categories";
 import { getCatalogProducts } from "@/lib/data/products";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import { getDictionary, getLocale } from "@/i18n/server";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(
   props: PageProps<"/[locale]/categories/[slug]">,
@@ -21,10 +22,14 @@ export async function generateMetadata(
 
   if (!category) return { title: dict.categories.title };
 
+  const name = currentLocale === "ar" ? category.name_ar : category.name_fr;
+  const description =
+    currentLocale === "ar" ? category.description_ar : category.description_fr;
+
   return {
-    title: currentLocale === "ar" ? category.name_ar : category.name_fr,
-    description:
-      currentLocale === "ar" ? category.description_ar : category.description_fr,
+    title: name,
+    description: description ?? undefined,
+    alternates: localeAlternates(`/categories/${category.slug}`, currentLocale),
   };
 }
 

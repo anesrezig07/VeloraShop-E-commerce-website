@@ -8,7 +8,10 @@ import { getDictionary, getLocale } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const dict = await getDictionary();
-  return { title: dict.checkout.title };
+  return {
+    title: dict.checkout.title,
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function CheckoutPage() {

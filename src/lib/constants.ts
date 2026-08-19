@@ -43,6 +43,10 @@ export const CART_COOKIE_NAME = "velora_cart";
 
 export const SITE_NAME = "Velora Shop";
 
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://velora-shop-e-commerce-website-five.vercel.app"
+).replace(/\/+$/, "");
+
 export const PHONE_NUMBER_PATTERN = /^0(5|6|7)\d{8}$/;
 
 export const PRODUCTS_PER_PAGE = 12;

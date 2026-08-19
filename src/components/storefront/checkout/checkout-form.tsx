@@ -14,6 +14,7 @@ import { createOrder } from "@/lib/actions/orders";
 import { checkoutSchema, type CheckoutValues } from "@/lib/validators";
 import { useCart } from "@/lib/cart/store";
 import { useDictionary, useLocale } from "@/i18n/client";
+import { formatEstimatedDelivery, formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { DeliveryRateWithWilaya } from "@/lib/types";
 
@@ -337,7 +338,7 @@ export function CheckoutForm({ deliveryOptions }: CheckoutFormProps) {
                       </p>
                       {fee !== null ? (
                         <p className="mt-1 text-sm font-medium tabular-nums">
-                          +{fee.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+                          +{formatPrice(fee, locale)}
                         </p>
                       ) : null}
                     </div>
@@ -377,10 +378,7 @@ export function CheckoutForm({ deliveryOptions }: CheckoutFormProps) {
                   </p>
                 </div>
                 <span className="text-sm font-medium tabular-nums">
-                  {(item.unitPrice * item.quantity).toLocaleString(
-                    locale === "ar" ? "ar-DZ" : "fr-DZ",
-                  )}{" "}
-                  DA
+                  {formatPrice(item.unitPrice * item.quantity, locale)}
                 </span>
               </li>
             ))}
@@ -390,30 +388,31 @@ export function CheckoutForm({ deliveryOptions }: CheckoutFormProps) {
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">{dict.cart.subtotal}</dt>
               <dd className="font-medium tabular-nums">
-                {subtotal.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+                {formatPrice(subtotal, locale)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">{dict.cart.deliveryFee}</dt>
               <dd className="font-medium tabular-nums">
-                {selectedRate
-                  ? `${deliveryFee.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA`
-                  : "—"}
+                {selectedRate ? formatPrice(deliveryFee, locale) : "—"}
               </dd>
             </div>
             {selectedRate ? (
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <dt>
                   {dict.confirmation.deliveryEstimate} :{" "}
-                  {selectedRate.estimated_days_min}–{selectedRate.estimated_days_max}{" "}
-                  jours
+                  {formatEstimatedDelivery(
+                    selectedRate.estimated_days_min,
+                    selectedRate.estimated_days_max,
+                    locale,
+                  )}
                 </dt>
               </div>
             ) : null}
             <div className="flex items-center justify-between border-t pt-3">
               <dt className="font-semibold">{dict.cart.total}</dt>
               <dd className="text-lg font-bold tabular-nums">
-                {total.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+                {formatPrice(total, locale)}
               </dd>
             </div>
           </dl>

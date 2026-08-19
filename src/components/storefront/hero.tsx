@@ -13,6 +13,8 @@ export function Hero({
     heroSubtitle: string;
     heroCta: string;
     heroSecondaryCta: string;
+    heroDeliveryEta: string;
+    heroVerifyAtReception: string;
   };
 }) {
   return (
@@ -52,11 +54,11 @@ export function Hero({
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <Truck className="size-4 text-primary" />
-              1–5 jours ouvrés
+              {dict.heroDeliveryEta}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <PackageCheck className="size-4 text-primary" />
-              Vérification à la réception
+              {dict.heroVerifyAtReception}
             </span>
           </div>
         </div>

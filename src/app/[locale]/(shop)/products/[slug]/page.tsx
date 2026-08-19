@@ -13,6 +13,8 @@ import { getDictionary, getLocale } from "@/i18n/server";
 import { formatDiscountPercent } from "@/lib/format";
 import { getEffectivePrice } from "@/lib/pricing";
 import { toNumber } from "@/lib/coerce";
+import { SITE_URL } from "@/lib/constants";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(
   props: PageProps<"/[locale]/products/[slug]">,
@@ -30,9 +32,12 @@ export async function generateMetadata(
   return {
     title: name,
     description: description.slice(0, 160),
+    alternates: localeAlternates(`/products/${product.slug}`, currentLocale),
     openGraph: {
       title: name,
       description: description.slice(0, 160),
+      url: `${SITE_URL}/${currentLocale}/products/${product.slug}`,
+      type: "website",
       images: primaryImage(product.images ?? [])
         ? [{ url: primaryImage(product.images ?? [])! }]
         : undefined,

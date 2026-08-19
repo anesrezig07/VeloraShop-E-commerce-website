@@ -53,6 +53,8 @@ export const ar: Dictionary = {
       "اكتشف تشكيلة مختارة من منتجات موثوقة مع الدفع عند الاستلام.",
     heroCta: "تصفح المتجر",
     heroSecondaryCta: "تصنيفاتنا",
+    heroDeliveryEta: "1–5 أيام عمل",
+    heroVerifyAtReception: "تحقق عند الاستلام",
     featured: "منتجات مميزة",
     newArrivals: "وصل حديثاً",
     bestSellers: "الأكثر مبيعاً",

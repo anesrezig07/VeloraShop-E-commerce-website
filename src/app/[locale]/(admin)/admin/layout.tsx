@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -5,6 +6,10 @@ import { AdminSidebarNav } from "@/components/admin/sidebar-nav";
 import { LogoutButton } from "@/components/admin/logout-button";
 import { getAdminSession } from "@/lib/admin/session";
 import { getLocale } from "@/i18n/server";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout(props: LayoutProps<"/[locale]/admin">) {
   const currentLocale = await getLocale();

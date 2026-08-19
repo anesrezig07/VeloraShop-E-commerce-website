@@ -1,10 +1,15 @@
 import { CheckCircle2, PhoneCall } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { getDictionary, getLocale } from "@/i18n/server";
-import { formatEstimatedDelivery } from "@/lib/format";
+import { formatEstimatedDelivery, formatPrice } from "@/lib/format";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function CheckoutSuccessPage(
   props: PageProps<"/[locale]/checkout/success">,
@@ -47,7 +52,7 @@ export default async function CheckoutSuccessPage(
             {dict.confirmation.totalAmount}
           </p>
           <p className="mt-1 text-lg font-bold tabular-nums">
-            {total.toLocaleString(currentLocale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+            {formatPrice(total, currentLocale)}
           </p>
         </div>
         <div>

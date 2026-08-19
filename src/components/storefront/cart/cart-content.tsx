@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Price } from "@/components/storefront/price";
 import { useCart } from "@/lib/cart/store";
 import { useDictionary, useLocale } from "@/i18n/client";
+import { formatPrice } from "@/lib/format";
 
 export function CartContent() {
   const { items, itemCount, subtotal, updateQuantity, removeItem } = useCart();
@@ -157,7 +158,7 @@ export function CartContent() {
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">{dict.cart.subtotal}</dt>
               <dd className="font-medium tabular-nums">
-                {subtotal.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+                {formatPrice(subtotal, locale)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
@@ -169,7 +170,7 @@ export function CartContent() {
             <div className="flex items-center justify-between border-t pt-3">
               <dt className="font-semibold">{dict.cart.total}</dt>
               <dd className="text-lg font-bold tabular-nums">
-                {subtotal.toLocaleString(locale === "ar" ? "ar-DZ" : "fr-DZ")} DA
+                {formatPrice(subtotal, locale)}
               </dd>
             </div>
           </dl>

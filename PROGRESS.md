@@ -16,11 +16,13 @@ Production-grade COD-only e-commerce platform for Algeria.
 - `src/components/ui/*`: shadcn base-nova components (button, card, input, select, dialog, alert-dialog, switch, table, sheet, tabs, textarea, label, skeleton, badge, sonner toast).
 
 ### Phase 2 — Database Schema (Supabase)
-- Migrations `supabase/migrations/0001_initial_schema.sql` … `0004_order_creation.sql`:
+- Migrations `supabase/migrations/0001_initial_schema.sql` … `0005_grants.sql`:
   - Tables: `products`, `product_variants`, `product_images`, `categories`, `wilayas` (58), `delivery_rates`, `customers`, `orders`, `order_items`, `admin_users`.
   - RLS: storefront reads only `is_active` data; admin tables gated by `public.is_admin()`; guest order placement via `place_order(...)` PL/pgSQL RPC (service-role only, atomic, recomputes prices, checks/decrements stock, computes delivery fee from `delivery_rates`, returns order number/totals).
   - Seed data + storage bucket for product images.
-- **NOT yet applied** to the live Supabase project.
+  - `0005_grants.sql`: explicit grants for `anon`/`authenticated`/`service_role` (required after `supabase db push` — default privileges don't cover CLI-created tables).
+- **Applied** to the live Supabase project (`jmqpmzkowhmkyucalyrc`) via `supabase db push --linked`; verified live data: 58 wilayas, 33 products, 9 categories, 58 delivery_rates, 12 product_variants, 41 product_images. Storage bucket `product-images` exists (public, 5 MB, jpeg/png/webp).
+- Admin user created in Auth via `/auth/v1/signup` (email confirmed) + `admin_users` row: `admin@velorashop.com`. Sign-in + admin RLS verified (reads `orders`, `admin_users`).
 
 ### Phase 3 — Storefront (verified: build, tsc, lint, smoke)
 - Data layer: `src/lib/data/{products,categories,delivery}.ts` (catalog w/ query/category/sort/maxPrice/pagination; featured/new/best-sellers; product by slug; related; delivery options/rate).
@@ -45,21 +47,31 @@ Production-grade COD-only e-commerce platform for Algeria.
 
 ---
 
+- `vercel.json` (`{"framework": "nextjs"}`) + `src/app/page.tsx` (redirect `/` → `/${defaultLocale}`) fix the Vercel 404 ("No Output Directory named 'public'") caused by the "Other" framework preset.
+- `.env.local`: `NEXT_PUBLIC_SUPABASE_URL` set to bare base URL (a `/rest/v1/` suffix breaks the supabase client).
+
 ## Verification status
 - `npx tsc --noEmit` ✅ clean · `npm run lint` ✅ clean · `npm run build` ✅ passes (storefront SSG/static, admin mostly SSG, orders/order-detail/products dynamic) · smoke tests ✅.
+- Live smoke tests: `/` 307 → `/fr` 200, `/ar` 200, `/fr/products` 200 (real products render), `/fr/categories` 200, `/fr/checkout` 200, `/fr/admin/login` 200, `/fr/admin` 307.
 
-## Current blocker
-- **Supabase credentials are populated but the project URL does not resolve** — DNS lookup for the host in `NEXT_PUBLIC_SUPABASE_URL` (`jmqpmzkovhmkyucalvrc.supabase.co`) returns nothing (`ENOTFOUND`), while `google.com` and `supabase.co` resolve fine. Likely a typo in the project reference ID.
-  - **Fix:** Supabase Dashboard → Project Settings → API → copy exact **Project URL**, **anon key**, **service_role key** into `.env.local`. Confirm all three.
-- Once reachable, still need to: apply migrations 0001–0004 (SQL Editor or `supabase db push`), enable storage bucket, create an admin user in Auth + insert into `admin_users`.
+## Phase 6 — Localization/RTL audit (done)
+- Dictionary parity enforced by `ar: Dictionary = typeof fr` (type-checked; tsc clean).
+- RTL: `<html dir>`/`lang` set per locale; icons flip via `rtl:rotate-180`; no hardcoded `ml-`/`mr-`/`text-left`/`space-x` in storefront/app components; admin Arabic inputs force `dir="rtl"`.
+- Fixed `formatEstimatedDelivery` Arabic pluralization (`${min} يوم` → `${min} يوم` for 1, `${min} أيام` for >1).
+- Number/date formatting: `formatPrice` uses `fr-FR` grouping (Western digits, space separators — the Algerian convention) for both locales; `formatDate`/`formatDateTime` use `ar-DZ`/`fr-DZ`.
+
+## Phase 7 — SEO/a11y polish (done)
+- `src/lib/constants.ts`: `SITE_URL` constant (env `NEXT_PUBLIC_SITE_URL`, fallback `https://velora-shop-e-commerce-website-five.vercel.app`).
+- `src/lib/seo.ts`: `localeAlternates(path, locale)` helper (canonical + fr/ar/x-default hreflang).
+- `sitemap.ts` (dynamic, `/sitemap.xml`): fr/ar alternates for `/`, `/products`, `/categories`, all active products (with `lastModified` from `updated_at`) and categories.
+- `robots.ts` (`/robots.txt`): allow all, disallow `/admin` (incl. fr/ar prefixed), sitemap URL. Excluded `robots.txt`/`sitemap.xml` from `proxy.ts` matcher (was redirecting them to `/fr/robots.txt` → 404).
+- Metadata: locale-aware `generateMetadata` in locale layout (fr/ar descriptions, OG `locale: fr_DZ`/`ar_DZ`), homepage, products, categories, category detail, product detail (canonical + hreflang + OG `url`/image). Admin layout + login + cart/checkout/success noindexed.
+- Formatting fixes for Arabic: cart/checkout/success/delivery-fee prices now use `formatPrice` (`دج` instead of `DA`); delivery ETA uses `formatEstimatedDelivery` (Arabic "أيام").
+- i18n: hero ETA/verification lines now dictionary-driven (`heroDeliveryEta`, `heroVerifyAtReception`) instead of hardcoded French.
+- Verified live: `/robots.txt` + `/sitemap.xml` serve; canonical/hreflang/noindex render correctly; `ar` page is `lang=ar dir=rtl`.
 
 ## Remaining phases
-- **Phase 6 — Localization/RTL audit:** review fr/ar copy, RTL alignment, pluralization.
-- **Phase 7 — SEO/a11y polish:** OG/metadata, sitemap, robots, a11y pass, skeletons, toast/validation polish, final visual polish.
 - **Phase 8 — E2E testing:** full flows (browse → cart → checkout → order placement → admin CRUD) against the real Supabase project.
 
 ## Next steps (priority order)
-1. Fix `.env.local` project URL (user copy from dashboard) → re-run connectivity probe (`node` fetch to `https://<host>/rest/v1/` with service role).
-2. Apply migrations + seed + storage bucket; create admin user (email/password) and grant `admin_users`.
-3. Re-run smoke tests with live data (storefront products/categories render, checkout shows delivery options, admin login works).
-4. Phase 6 → Phase 7 → Phase 8.
+1. Phase 8 — E2E against live data.

@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart/store";
 import { LocaleProvider } from "@/i18n/client";
 import { isLocale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/server";
-import { SITE_NAME } from "@/lib/constants";
+import { getDictionary, getLocale } from "@/i18n/server";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 
 import "../globals.css";
 
@@ -27,18 +27,38 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: SITE_NAME,
-    template: `%s — ${SITE_NAME}`,
-  },
-  description:
-    "Velora Shop — Boutique en ligne premium en Algérie. Livraison dans les 58 wilayas, paiement à la livraison.",
-  applicationName: SITE_NAME,
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  ),
-};
+const SITE_DESCRIPTION_FR =
+  "Velora Shop — Boutique en ligne premium en Algérie. Livraison dans les 58 wilayas, paiement à la livraison.";
+const SITE_DESCRIPTION_AR =
+  "فيلورا شوب — متجر إلكتروني متميز في الجزائر. توصيل لجميع الولايات الـ58 مع الدفع عند الاستلام.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const currentLocale = await getLocale();
+  const isArabic = currentLocale === "ar";
+
+  return {
+    title: {
+      default: SITE_NAME,
+      template: `%s — ${SITE_NAME}`,
+    },
+    description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_FR,
+    applicationName: SITE_NAME,
+    metadataBase: new URL(SITE_URL),
+    openGraph: {
+      title: SITE_NAME,
+      description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_FR,
+      url: `${SITE_URL}/${currentLocale}`,
+      siteName: SITE_NAME,
+      locale: isArabic ? "ar_DZ" : "fr_DZ",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: SITE_NAME,
+      description: isArabic ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION_FR,
+    },
+  };
+}
 
 export async function generateStaticParams() {
   return [{ locale: "fr" }, { locale: "ar" }];

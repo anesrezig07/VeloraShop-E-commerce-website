@@ -51,6 +51,8 @@ export const fr = {
       "Découvrez une sélection premium de produits vérifiés avec paiement à la livraison.",
     heroCta: "Explorer la boutique",
     heroSecondaryCta: "Nos catégories",
+    heroDeliveryEta: "1–5 jours ouvrés",
+    heroVerifyAtReception: "Vérification à la réception",
     featured: "Produits en vedette",
     newArrivals: "Nouveautés",
     bestSellers: "Meilleures ventes",

@@ -4,10 +4,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getActiveCategories } from "@/lib/data/categories";
 import { getDictionary, getLocale } from "@/i18n/server";
+import { localeAlternates } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const dict = await getDictionary();
-  return { title: dict.categories.title };
+  const currentLocale = await getLocale();
+  return {
+    title: dict.categories.title,
+    alternates: localeAlternates("/categories", currentLocale),
+  };
 }
 
 export default async function CategoriesPage() {

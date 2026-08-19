@@ -5,7 +5,7 @@ import { getDictionary } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const dict = await getDictionary();
-  return { title: dict.cart.title };
+  return { title: dict.cart.title, robots: { index: false, follow: false } };
 }
 
 export default function CartPage() {
