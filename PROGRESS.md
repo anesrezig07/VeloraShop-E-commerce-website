@@ -21,8 +21,10 @@ Production-grade COD-only e-commerce platform for Algeria.
   - RLS: storefront reads only `is_active` data; admin tables gated by `public.is_admin()`; guest order placement via `place_order(...)` PL/pgSQL RPC (service-role only, atomic, recomputes prices, checks/decrements stock, computes delivery fee from `delivery_rates`, returns order number/totals).
   - Seed data + storage bucket for product images.
   - `0005_grants.sql`: explicit grants for `anon`/`authenticated`/`service_role` (required after `supabase db push` — default privileges don't cover CLI-created tables).
+- `0006_service_role_grants.sql`: service_role table grants (SELECT/INSERT/UPDATE/DELETE on all tables) — without these, service-role table access fails with "permission denied for table …". Applied to live project.
 - **Applied** to the live Supabase project (`jmqpmzkowhmkyucalyrc`) via `supabase db push --linked`; verified live data: 58 wilayas, 33 products, 9 categories, 58 delivery_rates, 12 product_variants, 41 product_images. Storage bucket `product-images` exists (public, 5 MB, jpeg/png/webp).
 - Admin user created in Auth via `/auth/v1/signup` (email confirmed) + `admin_users` row: `admin@velorashop.com`. Sign-in + admin RLS verified (reads `orders`, `admin_users`).
+- **Seed fix:** `0002_seed.sql` order-number sequence restart bumped `1000 → 1008` (seed orders run VEL-01000..01007; a restart at 1000 made the next order collide). Live sequence set to 1008 via `setval`. Verified next order number is free.
 
 ### Phase 3 — Storefront (verified: build, tsc, lint, smoke)
 - Data layer: `src/lib/data/{products,categories,delivery}.ts` (catalog w/ query/category/sort/maxPrice/pagination; featured/new/best-sellers; product by slug; related; delivery options/rate).
@@ -70,8 +72,18 @@ Production-grade COD-only e-commerce platform for Algeria.
 - i18n: hero ETA/verification lines now dictionary-driven (`heroDeliveryEta`, `heroVerifyAtReception`) instead of hardcoded French.
 - Verified live: `/robots.txt` + `/sitemap.xml` serve; canonical/hreflang/noindex render correctly; `ar` page is `lang=ar dir=rtl`.
 
-## Remaining phases
-- **Phase 8 — E2E testing:** full flows (browse → cart → checkout → order placement → admin CRUD) against the real Supabase project.
+## Phase 8 — E2E testing (done)
+- Ran a 30-check E2E script against the production build (`next start`) + live Supabase: 30/30 passed.
+- HTTP/smoke: `/` 307, `/fr`+`/ar` 200, products/categories/cart/checkout/admin-login 200, `/fr/admin` 307, `/robots.txt`+`/sitemap.xml` 200; storefront renders products; Arabic page is `lang=ar dir=rtl`.
+- Checkout: `place_order` RPC placed a real order (VEL-01009, correct totals + delivery fee), `orders` row persisted (`status=pending`), `order_items` created, stock decremented; order cleaned up.
+- Admin auth: password sign-in works; admin RLS can read `admin_users`, create/update/delete products, upload to storage (and delete). Non-admin/anon blocked from `orders`/`admin_users` (verified with fresh unauthenticated client — a stale-session test bug was fixed in the script).
+- Found & fixed two production bugs:
+  1. **service_role had no table grants** → `0006_service_role_grants.sql` (service-role direct table access failed with "permission denied").
+  2. **order-number sequence collision** after seeding → seed restart bumped to `1008` + live `setval` (duplicate key on `orders_order_number_key`).
+- Data restored to clean baseline afterwards (8 orders / 8 customers / 16 order_items / 33 products / 1 auth user; product stock reverted).
 
-## Next steps (priority order)
-1. Phase 8 — E2E against live data.
+## Status
+All phases 1–8 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
+
+## Project state (as of last session)
+- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · E2E 30/30 ✅.

@@ -15,7 +15,7 @@ truncate table public.categories cascade;
 truncate table public.delivery_rates cascade;
 truncate table public.wilayas cascade;
 
-alter sequence public.order_number_seq restart with 1000;
+alter sequence public.order_number_seq restart with 1008;
 
 -- -----------------------------------------------------------------------------
 -- Wilayas (58)
