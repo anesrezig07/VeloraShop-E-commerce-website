@@ -16,6 +16,10 @@ let items: CartLine[] = [];
 let initialized = false;
 const listeners = new Set<() => void>();
 
+// Stable, cached snapshot used for server rendering. Returning a new array
+// reference on each call would make React re-render in an infinite loop.
+const EMPTY_CART_SNAPSHOT: CartLine[] = [];
+
 function readStoredCart(): CartLine[] {
   if (typeof window === "undefined") return [];
   try {
@@ -51,7 +55,7 @@ function getSnapshot(): CartLine[] {
 }
 
 function getServerSnapshot(): CartLine[] {
-  return [];
+  return EMPTY_CART_SNAPSHOT;
 }
 
 function subscribe(listener: () => void) {

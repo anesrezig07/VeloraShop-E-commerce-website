@@ -8,7 +8,7 @@ import { MaxPriceFilter } from "@/components/storefront/catalog/max-price-filter
 import { MobileFilters } from "@/components/storefront/catalog/mobile-filters";
 import { Pagination } from "@/components/storefront/catalog/pagination";
 import { ProductGrid } from "@/components/storefront/product-grid";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getActiveCategories } from "@/lib/data/categories";
 import { getCatalogProducts } from "@/lib/data/products";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
@@ -103,9 +103,12 @@ export default async function ProductsPage(props: PageProps<"/[locale]/products"
               <p className="max-w-sm text-sm text-muted-foreground">
                 {dict.products.noProductsSubtitle}
               </p>
-              <Button variant="outline" size="sm" render={<Link href={basePath} />}>
+              <Link
+                href={basePath}
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
                 {dict.products.resetFilters}
-              </Button>
+              </Link>
             </div>
           )}
 

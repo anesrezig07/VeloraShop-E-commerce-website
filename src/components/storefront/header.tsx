@@ -8,7 +8,7 @@ import { LanguageSwitcher } from "@/components/storefront/language-switcher";
 import { MobileNav } from "@/components/storefront/mobile-nav";
 import { SearchBar } from "@/components/storefront/search-bar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getDictionary } from "@/i18n/server";
 import type { Category } from "@/lib/types";
 
@@ -58,14 +58,13 @@ export async function Header({
           aria-label={dict.nav.menu}
         >
           {navLinks.map((link) => (
-            <Button
+            <Link
               key={link.href}
-              variant="ghost"
-              size="sm"
-              render={<Link href={link.href} />}
+              href={link.href}
+              className={buttonVariants({ variant: "ghost", size: "sm" })}
             >
               {link.label}
-            </Button>
+            </Link>
           ))}
           <CategoriesMenu
             categories={categories.map((category) => ({

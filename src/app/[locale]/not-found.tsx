@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getDictionary } from "@/i18n/server";
 
 export default async function NotFound() {
@@ -15,7 +15,9 @@ export default async function NotFound() {
       <p className="text-muted-foreground">
         {dict.confirmation.notFoundDescription}
       </p>
-      <Button render={<Link href="/" />}>{dict.common.back}</Button>
+      <Link href="/" className={buttonVariants()}>
+        {dict.common.back}
+      </Link>
     </main>
   );
 }

@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export function Pagination({
   page,
@@ -44,42 +43,70 @@ export function Pagination({
       className="mt-10 flex items-center justify-center gap-1"
       aria-label="pagination"
     >
-      <Button
-        variant="outline"
-        size="icon-sm"
-        disabled={page <= 1}
-        render={page > 1 ? <Link href={hrefFor(page - 1)} /> : undefined}
-        aria-label={dict.previous}
-      >
-        <ChevronLeft className="rtl:rotate-180" />
-      </Button>
+      {page > 1 ? (
+        <Link
+          href={hrefFor(page - 1)}
+          className={buttonVariants({ variant: "outline", size: "icon-sm" })}
+          aria-label={dict.previous}
+        >
+          <ChevronLeft className="rtl:rotate-180" />
+        </Link>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className={buttonVariants({ variant: "outline", size: "icon-sm" })}
+          aria-label={dict.previous}
+        >
+          <ChevronLeft className="rtl:rotate-180" />
+        </button>
+      )}
       {pages.map((p, index) =>
         p === "ellipsis" ? (
           <span key={`e-${index}`} className="px-2 text-muted-foreground">
             …
           </span>
-        ) : (
-          <Button
+        ) : p === page ? (
+          <button
             key={p}
-            variant={p === page ? "default" : "ghost"}
-            size="icon-sm"
-            render={p !== page ? <Link href={hrefFor(p)} /> : undefined}
-            aria-current={p === page ? "page" : undefined}
-            className={cn(p !== page && "text-muted-foreground")}
+            type="button"
+            className={buttonVariants({ variant: "default", size: "icon-sm" })}
+            aria-current="page"
           >
             {p}
-          </Button>
+          </button>
+        ) : (
+          <Link
+            key={p}
+            href={hrefFor(p)}
+            className={buttonVariants({
+              variant: "ghost",
+              size: "icon-sm",
+              className: "text-muted-foreground",
+            })}
+          >
+            {p}
+          </Link>
         ),
       )}
-      <Button
-        variant="outline"
-        size="icon-sm"
-        disabled={page >= pageCount}
-        render={page < pageCount ? <Link href={hrefFor(page + 1)} /> : undefined}
-        aria-label={dict.next}
-      >
-        <ChevronRight className="rtl:rotate-180" />
-      </Button>
+      {page < pageCount ? (
+        <Link
+          href={hrefFor(page + 1)}
+          className={buttonVariants({ variant: "outline", size: "icon-sm" })}
+          aria-label={dict.next}
+        >
+          <ChevronRight className="rtl:rotate-180" />
+        </Link>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className={buttonVariants({ variant: "outline", size: "icon-sm" })}
+          aria-label={dict.next}
+        >
+          <ChevronRight className="rtl:rotate-180" />
+        </button>
+      )}
     </nav>
   );
 }

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getDictionary, getLocale } from "@/i18n/server";
 import { formatEstimatedDelivery, formatPrice } from "@/lib/format";
 
@@ -91,16 +91,18 @@ export default async function CheckoutSuccessPage(
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <Button size="lg" render={<Link href={`/${currentLocale}`} />}>
+        <Link
+          href={`/${currentLocale}`}
+          className={buttonVariants({ size: "lg" })}
+        >
           {dict.confirmation.backHome}
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          render={<Link href={`/${currentLocale}/products`} />}
+        </Link>
+        <Link
+          href={`/${currentLocale}/products`}
+          className={buttonVariants({ variant: "outline", size: "lg" })}
         >
           {dict.confirmation.backToShop}
-        </Button>
+        </Link>
       </div>
     </div>
   );

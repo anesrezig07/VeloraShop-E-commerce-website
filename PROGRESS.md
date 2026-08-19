@@ -94,8 +94,20 @@ Production-grade COD-only e-commerce platform for Algeria.
 - **i18n**: new keys added to both `fr.ts` and `ar.ts` (typed parity): theme toggle, wishlist, search suggestions/recent, announcement bar, availability/sale filters, featured sort, menu.
 - Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · dev-server smoke on `/fr`, `/ar` (RTL), `/fr/products` (filters + sort), `/fr/categories` (counts), `/fr/products/samsung-galaxy-a55` (wishlist + buy box).
 
+## Phase 10 — Technical error audit (done)
+- Headless Chrome (puppeteer-core, temp dir) console/network audit across 12 core routes (fr/ar: `/`, `/categories`, `/products`, `/cart`, `/checkout`, `/admin/login`) + product detail pages: **0 console errors, 0 React/Base UI warnings, 0 hydration issues, all HTTP 200**.
+- Interactive flow: add-to-cart → cart shows item → checkout shows product, no console errors.
+- Admin flow (fr + ar): unauthenticated `/admin` redirects to login; correct credentials sign in to dashboard; wrong password stays on login with error; dashboard/products/categories/orders/order-detail/customers/delivery/product-new all load; logout returns to login. No console errors.
+- Dark mode: toggle switches `dark`⇄`light`, persists across reload; initial state follows system preference.
+- Mobile (375px): no horizontal scroll on `/`, `/products`, product detail, `/categories`, `/cart`, `/checkout`; bottom nav present.
+- RTL: all `ar` pages render `dir=rtl lang=ar` (storefront + admin); Arabic admin dashboard renders correctly.
+- Image handling: occasional transient 504 from `_next/image` proxying `picsum.photos` (external upstream latency); confirmed non-reproducible on consecutive networkidle reloads. Not an app defect.
+- Static checks: no `console.log`/`TODO`/`FIXME`/`alert()`; no setState-in-effect anti-patterns; only `dangerouslySetInnerHTML` is standard JSON-LD schema markup.
+- Cleanup: removed dead `.theme-transition` CSS rule from `globals.css` (defined, never referenced).
+- Final validation: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ (34 routes).
+
 ## Status
-All phases 1–9 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
+All phases 1–10 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
 
 ## Project state (as of last session)
 - Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · E2E 30/30 ✅ · redesign smoke tests ✅.

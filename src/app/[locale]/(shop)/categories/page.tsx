@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { getActiveCategoriesWithCounts } from "@/lib/data/categories";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -89,13 +89,12 @@ export default async function CategoriesPage() {
       ) : (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-20 text-center">
           <p className="font-medium">{dict.categories.empty}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            render={<Link href={`/${currentLocale}/products`} />}
+          <Link
+            href={`/${currentLocale}/products`}
+            className={buttonVariants({ variant: "outline", size: "sm" })}
           >
             {dict.products.title}
-          </Button>
+          </Link>
         </div>
       )}
     </div>

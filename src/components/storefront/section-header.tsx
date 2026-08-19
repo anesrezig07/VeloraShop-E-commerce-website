@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 export function SectionHeader({
   title,
@@ -24,14 +24,16 @@ export function SectionHeader({
         ) : null}
       </div>
       {seeAllHref && seeAllLabel ? (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="shrink-0"
-          render={<Link href={seeAllHref} />}
+        <Link
+          href={seeAllHref}
+          className={buttonVariants({
+            variant: "ghost",
+            size: "sm",
+            className: "shrink-0",
+          })}
         >
           {seeAllLabel}
-        </Button>
+        </Link>
       ) : null}
     </div>
   );

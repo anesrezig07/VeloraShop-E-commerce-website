@@ -21,6 +21,10 @@ let items: WishlistItem[] = [];
 let initialized = false;
 const listeners = new Set<() => void>();
 
+// Stable, cached snapshot used for server rendering. Returning a new array
+// reference on each call would make React re-render in an infinite loop.
+const EMPTY_WISHLIST_SNAPSHOT: WishlistItem[] = [];
+
 function readStoredWishlist(): WishlistItem[] {
   if (typeof window === "undefined") return [];
   try {
@@ -51,7 +55,7 @@ function getSnapshot(): WishlistItem[] {
 }
 
 function getServerSnapshot(): WishlistItem[] {
-  return [];
+  return EMPTY_WISHLIST_SNAPSHOT;
 }
 
 function subscribe(listener: () => void) {

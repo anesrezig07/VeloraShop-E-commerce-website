@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 
 import { PageHeader } from "@/components/admin/page-header";
 import { ProductRowActions } from "@/components/admin/product-row-actions";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -52,12 +52,13 @@ export function ProductsTable({ products }: { products: AdminProduct[] }) {
           String(products.length),
         )}
         actions={
-          <Button
-            render={<Link href={`/${locale}/admin/products/new`} />}
+          <Link
+            href={`/${locale}/admin/products/new`}
+            className={buttonVariants()}
           >
             <Plus data-icon="inline-start" />
             {dict.admin.newProduct}
-          </Button>
+          </Link>
         }
       />
 

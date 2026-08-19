@@ -4,7 +4,7 @@ import { CircleCheck, CircleDollarSign, Package, Timer } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/page-header";
 import { StatusBadge } from "@/components/admin/status-badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -83,13 +83,12 @@ export default async function AdminDashboardPage() {
         <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">{dict.admin.recentOrders}</CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              render={<Link href={`/${currentLocale}/admin/orders`} />}
+            <Link
+              href={`/${currentLocale}/admin/orders`}
+              className={buttonVariants({ variant: "ghost", size: "sm" })}
             >
               {dict.admin.viewAll}
-            </Button>
+            </Link>
           </CardHeader>
           <CardContent className="p-0">
             <Table>

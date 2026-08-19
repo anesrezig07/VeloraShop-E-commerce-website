@@ -41,8 +41,9 @@ export function MobileNav({
       <SheetTrigger
         render={
           variant === "bottom" ? (
-            <span
-              className="flex h-full w-full flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+            <button
+              type="button"
+              className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-0.5 border-0 bg-transparent p-0 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
               aria-label={dict.nav.menu}
             />
           ) : (

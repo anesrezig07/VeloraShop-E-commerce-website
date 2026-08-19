@@ -3,7 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useCart } from "@/lib/cart/store";
 import { useDictionary, useLocale } from "@/i18n/client";
 
@@ -13,11 +13,9 @@ export function CartButton() {
   const dict = useDictionary();
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="relative"
-      render={<Link href={`/${locale}/cart`} />}
+    <Link
+      href={`/${locale}/cart`}
+      className={buttonVariants({ variant: "outline", size: "sm", className: "relative" })}
       aria-label={dict.nav.cart}
     >
       <span
@@ -36,6 +34,6 @@ export function CartButton() {
           {itemCount > 99 ? "99+" : itemCount}
         </span>
       ) : null}
-    </Button>
+    </Link>
   );
 }

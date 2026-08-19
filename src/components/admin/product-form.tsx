@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -616,14 +616,12 @@ export function ProductForm({
           <Button type="submit" size="lg" disabled={isPending}>
             {isPending ? dict.common.loading : dict.common.saveChanges}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            render={<Link href={`/${locale}/admin/products`} />}
+          <Link
+            href={`/${locale}/admin/products`}
+            className={buttonVariants({ variant: "outline", size: "lg" })}
           >
             {dict.common.cancel}
-          </Button>
+          </Link>
         </div>
       </form>
     </div>

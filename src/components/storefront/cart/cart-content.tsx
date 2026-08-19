@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Price } from "@/components/storefront/price";
 import { useCart } from "@/lib/cart/store";
 import { useDictionary, useLocale } from "@/i18n/client";
@@ -29,9 +29,12 @@ export function CartContent() {
             {dict.cart.emptyDescription}
           </p>
         </div>
-        <Button size="lg" render={<Link href={`/${locale}/products`} />}>
+        <Link
+          href={`/${locale}/products`}
+          className={buttonVariants({ size: "lg" })}
+        >
           {dict.cart.startShopping}
-        </Button>
+        </Link>
       </div>
     );
   }
@@ -145,9 +148,12 @@ export function CartContent() {
         </ul>
 
         <div className="mt-6">
-          <Button variant="outline" render={<Link href={`/${locale}/products`} />}>
-            {dict.cart.continueShopping}
-          </Button>
+          <Link
+          href={`/${locale}/products`}
+          className={buttonVariants({ variant: "outline" })}
+        >
+          {dict.cart.continueShopping}
+        </Link>
         </div>
       </div>
 

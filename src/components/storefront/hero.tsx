@@ -2,7 +2,7 @@ import { ArrowRight, PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { primaryImage, type CatalogProduct } from "@/lib/data/products";
 
 export function Hero({
@@ -49,20 +49,19 @@ export function Hero({
             {dict.heroSubtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button
-              size="lg"
-              render={<Link href={`/${locale}/products`} />}
+            <Link
+              href={`/${locale}/products`}
+              className={buttonVariants({ size: "lg" })}
             >
               {dict.heroCta}
               <ArrowRight data-icon="inline-end" className="rtl:rotate-180" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              render={<Link href={`/${locale}/categories`} />}
+            </Link>
+            <Link
+              href={`/${locale}/categories`}
+              className={buttonVariants({ size: "lg", variant: "outline" })}
             >
               {dict.heroSecondaryCta}
-            </Button>
+            </Link>
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
@@ -84,7 +83,8 @@ export function Hero({
                   src={image}
                   alt={productName ?? ""}
                   fill
-                  priority
+                  loading="eager"
+                  fetchPriority="high"
                   sizes="(min-width: 1024px) 45vw, 100vw"
                   className="object-cover"
                 />

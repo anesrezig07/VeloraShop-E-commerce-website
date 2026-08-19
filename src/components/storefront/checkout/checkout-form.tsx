@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState, useTransition } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -56,9 +56,12 @@ export function CheckoutForm({ deliveryOptions }: CheckoutFormProps) {
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-20 text-center">
         <p className="font-medium">{dict.checkout.emptyCart}</p>
-        <Button variant="outline" render={<Link href={`/${locale}/products`} />}>
+        <Link
+          href={`/${locale}/products`}
+          className={buttonVariants({ variant: "outline" })}
+        >
           {dict.cart.startShopping}
-        </Button>
+        </Link>
       </div>
     );
   }

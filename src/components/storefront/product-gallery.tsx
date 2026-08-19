@@ -34,7 +34,8 @@ export function ProductGallery({
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-cover"
-          priority
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
       {sorted.length > 1 ? (

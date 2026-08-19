@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import { CheckoutForm } from "@/components/storefront/checkout/checkout-form";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getDeliveryOptions } from "@/lib/data/delivery";
 import { getDictionary, getLocale } from "@/i18n/server";
 
@@ -26,9 +26,12 @@ export default async function CheckoutPage() {
           {dict.checkout.unavailable}
         </h1>
         <p className="text-sm text-muted-foreground">{dict.admin.notConfigured}</p>
-        <Button variant="outline" render={<Link href={`/${currentLocale}/products`} />}>
+        <Link
+          href={`/${currentLocale}/products`}
+          className={buttonVariants({ variant: "outline" })}
+        >
           {dict.cart.startShopping}
-        </Button>
+        </Link>
       </div>
     );
   }

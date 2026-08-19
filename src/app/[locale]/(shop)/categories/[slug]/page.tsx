@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { CatalogSort } from "@/components/storefront/catalog/catalog-sort";
 import { Pagination } from "@/components/storefront/catalog/pagination";
 import { ProductGrid } from "@/components/storefront/product-grid";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getCategoryBySlug } from "@/lib/data/categories";
 import { getCatalogProducts } from "@/lib/data/products";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
@@ -95,9 +95,12 @@ export default async function CategoryPage(
       ) : (
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed py-20 text-center">
           <p className="font-medium">{dict.products.noProducts}</p>
-          <Button variant="outline" size="sm" render={<Link href={basePath} />}>
+          <Link
+            href={basePath}
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
             {dict.products.resetFilters}
-          </Button>
+          </Link>
         </div>
       )}
 
