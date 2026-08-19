@@ -57,8 +57,8 @@ export function ProductGallery({
               <Image
                 src={image.url}
                 alt=""
-                fill
-                sizes="80px"
+                width={80}
+                height={80}
                 loading="lazy"
                 className="object-cover"
               />
