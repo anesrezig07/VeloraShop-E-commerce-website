@@ -152,7 +152,7 @@ export function CartContent() {
       </div>
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-xl border bg-card p-5">
+        <div className="rounded-xl border bg-card p-5 shadow-card">
           <h2 className="font-heading text-lg font-bold">{dict.cart.orderSummary}</h2>
           <dl className="mt-4 flex flex-col gap-3 text-sm">
             <div className="flex items-center justify-between">

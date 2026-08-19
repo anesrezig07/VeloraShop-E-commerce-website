@@ -35,6 +35,8 @@ export async function getCatalogProducts({
   sort,
   page,
   maxPrice,
+  inStock,
+  onSale,
   limit = 12,
 }: {
   q?: string;
@@ -42,6 +44,8 @@ export async function getCatalogProducts({
   sort?: string;
   page?: number;
   maxPrice?: number;
+  inStock?: boolean;
+  onSale?: boolean;
   limit?: number;
 }): Promise<{ items: CatalogProduct[]; total: number; page: number; pageCount: number }> {
   if (!isSupabasePubliclyConfigured()) {
@@ -72,7 +76,19 @@ export async function getCatalogProducts({
     );
   }
 
+  if (inStock) {
+    query = query.gt("stock", 0);
+  }
+
+  if (onSale) {
+    query = query.not("sale_price", "is", null).gt("sale_price", 0);
+  }
+
   switch (sort) {
+    case "featured":
+      query = query.order("is_featured", { ascending: false })
+        .order("created_at", { ascending: false });
+      break;
     case "price-asc":
       query = query.order("sale_price", { ascending: true, nullsFirst: false })
         .order("price", { ascending: true });
@@ -209,4 +225,51 @@ export async function getRelatedProducts(
     return [];
   }
   return (data ?? []) as CatalogProduct[];
+}
+
+export type SearchSuggestion = {
+  id: string;
+  name_fr: string;
+  name_ar: string;
+  slug: string;
+  price: string | number;
+  sale_price: string | number | null;
+  image_url: string | null;
+};
+
+export async function getSearchSuggestions(
+  term: string,
+  limit = 6,
+): Promise<SearchSuggestion[]> {
+  if (!isSupabasePubliclyConfigured() || !term.trim()) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      "id, name_fr, name_ar, slug, price, sale_price, images:product_images(url, is_primary, display_order)",
+    )
+    .eq("is_active", true)
+    .or(`name_fr.ilike.%${term.trim()}%,name_ar.ilike.%${term.trim()}%`)
+    .order("name_fr", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error("getSearchSuggestions:", error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) => {
+    const images = row.images ?? [];
+    const primary = images.find((image) => image.is_primary) ?? images[0];
+    return {
+      id: row.id,
+      name_fr: row.name_fr,
+      name_ar: row.name_ar,
+      slug: row.slug,
+      price: row.price,
+      sale_price: row.sale_price,
+      image_url: primary?.url ?? null,
+    } as SearchSuggestion;
+  });
 }

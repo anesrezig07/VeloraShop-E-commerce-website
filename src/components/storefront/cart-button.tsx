@@ -1,5 +1,6 @@
 "use client";
 
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -19,21 +20,14 @@ export function CartButton() {
       render={<Link href={`/${locale}/cart`} />}
       aria-label={dict.nav.cart}
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-4"
-        aria-hidden="true"
+      <span
+        key={itemCount}
+        data-icon="inline-start"
+        className={itemCount > 0 ? "animate-pop" : undefined}
       >
-        <circle cx="8" cy="21" r="1" />
-        <circle cx="19" cy="21" r="1" />
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-      </svg>
-      <span>{dict.nav.cart}</span>
+        <ShoppingCart className="size-4" />
+      </span>
+      <span className="hidden sm:inline">{dict.nav.cart}</span>
       {itemCount > 0 ? (
         <span
           className="absolute -top-1.5 -end-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground"

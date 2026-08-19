@@ -3,7 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminSidebarNav } from "@/components/admin/sidebar-nav";
+import { AdminMobileNav } from "@/components/admin/mobile-nav";
 import { LogoutButton } from "@/components/admin/logout-button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getAdminSession } from "@/lib/admin/session";
 import { getLocale } from "@/i18n/server";
 
@@ -39,6 +41,10 @@ export default async function AdminLayout(props: LayoutProps<"/[locale]/admin">)
             <span className="hidden text-xs text-muted-foreground sm:inline">
               {session.user.email}
             </span>
+            <div className="lg:hidden">
+              <AdminMobileNav />
+            </div>
+            <ThemeToggle />
             <LogoutButton />
           </div>
         </div>

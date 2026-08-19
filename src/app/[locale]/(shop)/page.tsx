@@ -6,7 +6,7 @@ import { Hero } from "@/components/storefront/hero";
 import { ProductGrid } from "@/components/storefront/product-grid";
 import { SectionHeader } from "@/components/storefront/section-header";
 import { WhyShopSection } from "@/components/storefront/why-shop-section";
-import { getActiveCategories } from "@/lib/data/categories";
+import { getActiveCategoriesWithCounts } from "@/lib/data/categories";
 import {
   getBestSellers,
   getFeaturedProducts,
@@ -50,12 +50,16 @@ export default async function HomePage() {
     getFeaturedProducts(8),
     getNewArrivals(8),
     getBestSellers(8),
-    getActiveCategories(),
+    getActiveCategoriesWithCounts(),
   ]);
 
   return (
     <>
-      <Hero locale={currentLocale} dict={dict.home} />
+      <Hero
+        locale={currentLocale}
+        dict={dict.home}
+        featuredProduct={featured[0] ?? null}
+      />
 
       {categories.length > 0 ? (
         <section className="mx-auto max-w-7xl px-4 py-12 lg:px-6">

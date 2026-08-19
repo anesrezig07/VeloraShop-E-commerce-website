@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/storefront/language-switcher";
 import { SearchBar } from "@/components/storefront/search-bar";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Sheet,
   SheetContent,
@@ -19,8 +20,10 @@ import { cn } from "@/lib/utils";
 
 export function MobileNav({
   categories,
+  variant = "button",
 }: {
   categories: { slug: string; name: string }[];
+  variant?: "button" | "bottom";
 }) {
   const dict = useDictionary();
   const locale = useLocale();
@@ -37,12 +40,19 @@ export function MobileNav({
     <Sheet>
       <SheetTrigger
         render={
-          <Button variant="outline" size="icon" aria-label={dict.nav.menu} />
+          variant === "bottom" ? (
+            <span
+              className="flex h-full w-full flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+              aria-label={dict.nav.menu}
+            />
+          ) : (
+            <Button variant="outline" size="icon" aria-label={dict.nav.menu} />
+          )
         }
       >
-        <Menu />
+        <Menu className="size-5" />
       </SheetTrigger>
-      <SheetContent side="right" className="w-80">
+      <SheetContent side="right" className="w-[min(20rem,85vw)]">
         <SheetHeader>
           <SheetTitle>{dict.nav.menu}</SheetTitle>
         </SheetHeader>
@@ -92,8 +102,9 @@ export function MobileNav({
               </ul>
             </div>
           ) : null}
-          <div className="mt-auto pt-2">
+          <div className="mt-auto flex items-center justify-between border-t pt-3">
             <LanguageSwitcher />
+            <ThemeToggle />
           </div>
         </div>
       </SheetContent>

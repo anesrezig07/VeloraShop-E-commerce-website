@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { CircleCheck, CircleDollarSign, Package, Timer } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/page-header";
 import { StatusBadge } from "@/components/admin/status-badge";
@@ -31,13 +32,26 @@ export default async function AdminDashboardPage() {
   const stats = await getDashboardStats(supabase);
 
   const cards = [
-    { label: dict.admin.totalOrders, value: String(stats.totalOrders) },
+    {
+      label: dict.admin.totalOrders,
+      value: String(stats.totalOrders),
+      icon: Package,
+    },
     {
       label: dict.admin.totalRevenue,
       value: formatPrice(stats.revenue, currentLocale),
+      icon: CircleDollarSign,
     },
-    { label: dict.admin.ordersPending, value: String(stats.pending) },
-    { label: dict.admin.ordersDelivered, value: String(stats.delivered) },
+    {
+      label: dict.admin.ordersPending,
+      value: String(stats.pending),
+      icon: Timer,
+    },
+    {
+      label: dict.admin.ordersDelivered,
+      value: String(stats.delivered),
+      icon: CircleCheck,
+    },
   ];
 
   return (
@@ -46,11 +60,17 @@ export default async function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
-          <Card key={card.label}>
-            <CardHeader>
+          <Card
+            key={card.label}
+            className="border-transparent bg-gradient-to-br from-card to-muted shadow-card"
+          >
+            <CardHeader className="flex-row items-center justify-between space-y-0">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {card.label}
               </CardTitle>
+              <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <card.icon className="size-4" />
+              </span>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold tabular-nums">{card.value}</p>

@@ -41,3 +41,29 @@ export async function getCategoryBySlug(
   }
   return data as Category;
 }
+
+export type CategoryWithCount = Category & { productCount: number };
+
+export async function getActiveCategoriesWithCounts(): Promise<CategoryWithCount[]> {
+  if (!isSupabasePubliclyConfigured()) return [];
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*, products!inner(id)")
+    .eq("is_active", true)
+    .eq("products.is_active", true)
+    .order("display_order", { ascending: true })
+    .order("name_fr", { ascending: true });
+
+  if (error) {
+    console.error("getActiveCategoriesWithCounts:", error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) => ({
+    ...row,
+    products: undefined,
+    productCount: Array.isArray(row.products) ? row.products.length : 0,
+  })) as unknown as CategoryWithCount[];
+}

@@ -18,7 +18,7 @@ export async function Footer({
   ];
 
   return (
-    <footer className="border-t bg-muted/40">
+    <footer className="border-t bg-card/60">
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -26,7 +26,7 @@ export async function Footer({
               href={`/${locale}`}
               className="flex items-center gap-2 text-xl font-extrabold tracking-tight"
             >
-              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground">
+              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground shadow-card">
                 V
               </span>
               Velora<span className="text-primary">.</span>
@@ -71,16 +71,34 @@ export async function Footer({
           <div>
             <h3 className="text-sm font-semibold">{dict.footer.contact}</h3>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-muted-foreground">
-              <li>{dict.footer.paymentMethods}</li>
-              <li>{dict.footer.securePayment}</li>
-              <li>{dict.footer.deliveryInfo}</li>
-              <li>{dict.footer.address}</li>
+              <li className="inline-flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-primary" />
+                {dict.footer.paymentMethods}
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-primary" />
+                {dict.footer.securePayment}
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-primary" />
+                {dict.footer.deliveryInfo}
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-primary" />
+                {dict.footer.address}
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-10 border-t pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Velora Shop · {dict.footer.rights}
+        <div className="mt-10 flex flex-col items-center gap-2 border-t pt-6 text-center text-xs text-muted-foreground sm:flex-row sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} Velora Shop · {dict.footer.rights}
+          </p>
+          <p className="inline-flex items-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-success" />
+            {dict.footer.securePayment}
+          </p>
         </div>
       </div>
     </footer>

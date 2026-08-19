@@ -82,8 +82,20 @@ Production-grade COD-only e-commerce platform for Algeria.
   2. **order-number sequence collision** after seeding → seed restart bumped to `1008` + live `setval` (duplicate key on `orders_order_number_key`).
 - Data restored to clean baseline afterwards (8 orders / 8 customers / 16 order_items / 33 products / 1 auth user; product stock reverted).
 
+## Phase 9 — Premium 2026 UI/UX redesign (done)
+- **Design system** (`src/app/globals.css`): refined oklch tokens for light + dark (deep neutral dark surfaces, richer teal primary, amber sale, soft premium shadows), animation keyframes (marquee, shimmer, pop, fade-up, scale-in), `premium-skeleton` shimmer loader, custom scrollbar, `prefers-reduced-motion` support.
+- **Theming**: wired `next-themes` via `ThemeProvider` (`attribute="class"`, system default, `disableTransitionOnChange`) in the root locale layout + `suppressHydrationWarning`; new `ThemeToggle` (☀️/🌙) in shop header, mobile sheet, admin header + login.
+- **Animation utilities**: `Reveal` (IntersectionObserver scroll reveal, direction/delay, reduced-motion aware) + `RouteTransition` (keyed remount fade on route change) in the shop layout.
+- **Header**: `HeaderShell` (sticky, shrinks + shadow on scroll), configurable `AnnouncementBar` marquee (delivery/COD/offers, i18n-driven), desktop `CategoriesMenu` dropdown, theme toggle, animated cart button (pop on count change).
+- **Mobile**: `MobileBottomNav` (Home/Categories/Search/Cart/Menu 5-slot bar, safe-area aware, badges) + redesigned `MobileNav` sheet; Search overlay with debounced live suggestions (products w/ thumbnails + prices) + recent searches (localStorage) + loading skeleton.
+- **Storefront**: hero redesign with real featured-product image + floating product card; category grid/categories page with real images + live product counts (`getActiveCategoriesWithCounts`); product cards with hover lift/shadow, sale badge, stock states, wishlist heart (hover/focus); product detail wishlist button + sticky CTA; catalog `featured` sort + `AvailabilityFilters` (in-stock / on-sale checkboxes) in sidebar + mobile sheet; cart/checkout summary cards shadow polish; footer/trust/promo sections refined with reveals; admin dashboard stat cards with icons + gradient; admin mobile nav dropdown.
+- **Wishlist**: new client-side `WishlistProvider` store (localStorage `velora_wishlist`) + `WishlistButton` (heart toggle + toast).
+- **Loading states**: premium shimmer skeletons for products catalog + product detail; empty states polished.
+- **i18n**: new keys added to both `fr.ts` and `ar.ts` (typed parity): theme toggle, wishlist, search suggestions/recent, announcement bar, availability/sale filters, featured sort, menu.
+- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · dev-server smoke on `/fr`, `/ar` (RTL), `/fr/products` (filters + sort), `/fr/categories` (counts), `/fr/products/samsung-galaxy-a55` (wishlist + buy box).
+
 ## Status
-All phases 1–8 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
+All phases 1–9 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
 
 ## Project state (as of last session)
-- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · E2E 30/30 ✅.
+- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · E2E 30/30 ✅ · redesign smoke tests ✅.

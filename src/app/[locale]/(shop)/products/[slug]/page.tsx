@@ -7,6 +7,7 @@ import { Price } from "@/components/storefront/price";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { ProductGrid } from "@/components/storefront/product-grid";
 import { SectionHeader } from "@/components/storefront/section-header";
+import { WishlistButton } from "@/components/storefront/wishlist-button";
 import { Badge } from "@/components/ui/badge";
 import { getRelatedProducts, getProductBySlug, primaryImage } from "@/lib/data/products";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -139,7 +140,7 @@ export default async function ProductPage(
             <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
               {name}
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3">
               <Price
                 value={basePrice}
                 compareAt={discount ? price : null}
@@ -147,8 +148,17 @@ export default async function ProductPage(
                 size="lg"
               />
               {discount ? (
-                <Badge variant="destructive">-{discount}%</Badge>
+                <Badge className="bg-sale text-sale-foreground" variant="secondary">
+                  -{discount}%
+                </Badge>
               ) : null}
+              <WishlistButton
+                productId={product.id}
+                name={name}
+                slug={product.slug}
+                imageUrl={image}
+                className="ms-auto"
+              />
             </div>
           </div>
 

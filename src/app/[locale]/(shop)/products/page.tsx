@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { CatalogCategories } from "@/components/storefront/catalog/catalog-categories";
 import { CatalogSort } from "@/components/storefront/catalog/catalog-sort";
+import { AvailabilityFilters } from "@/components/storefront/catalog/availability-filters";
 import { MaxPriceFilter } from "@/components/storefront/catalog/max-price-filter";
 import { MobileFilters } from "@/components/storefront/catalog/mobile-filters";
 import { Pagination } from "@/components/storefront/catalog/pagination";
@@ -34,6 +35,8 @@ export default async function ProductsPage(props: PageProps<"/[locale]/products"
   const sort = typeof searchParams.sort === "string" ? searchParams.sort : undefined;
   const page = Number(searchParams.page ?? 1);
   const maxPrice = Number(searchParams.maxPrice ?? 0) || undefined;
+  const inStock = searchParams.inStock === "1";
+  const onSale = searchParams.onSale === "1";
 
   const [result, categories] = await Promise.all([
     getCatalogProducts({
@@ -42,6 +45,8 @@ export default async function ProductsPage(props: PageProps<"/[locale]/products"
       sort,
       page: Number.isFinite(page) ? page : 1,
       maxPrice,
+      inStock,
+      onSale,
       limit: PRODUCTS_PER_PAGE,
     }),
     getActiveCategories(),
@@ -61,6 +66,7 @@ export default async function ProductsPage(props: PageProps<"/[locale]/products"
           dict={{ categoryAll: dict.products.categoryAll }}
         />
       </div>
+      <AvailabilityFilters />
       <MaxPriceFilter defaultValue={searchParams.maxPrice?.toString()} />
     </div>
   );

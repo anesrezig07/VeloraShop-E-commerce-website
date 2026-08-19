@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminLoginForm } from "@/components/admin/login-form";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getAdminSession } from "@/lib/admin/session";
 import { getDictionary, getLocale } from "@/i18n/server";
 
@@ -21,7 +22,10 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="flex min-h-full flex-1 items-center justify-center px-4 py-16">
-      <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-sm">
+      <div className="absolute top-4 end-4">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-premium">
         <Link
           href={`/${currentLocale}`}
           className="flex items-center gap-2 text-xl font-extrabold tracking-tight"

@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { locale } from "next/root-params";
 
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import { CartProvider } from "@/lib/cart/store";
+import { WishlistProvider } from "@/lib/wishlist/store";
 import { LocaleProvider } from "@/i18n/client";
 import { isLocale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
@@ -78,12 +80,17 @@ export default async function LocaleLayout(props: LayoutProps<"/[locale]">) {
     <html
       lang={currentLocale}
       dir={dir}
+      suppressHydrationWarning
       className={`${inter.variable} ${cairo.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <LocaleProvider locale={currentLocale} dictionary={dictionary}>
-          <CartProvider>{props.children}</CartProvider>
-        </LocaleProvider>
+        <ThemeProvider>
+          <LocaleProvider locale={currentLocale} dictionary={dictionary}>
+            <CartProvider>
+              <WishlistProvider>{props.children}</WishlistProvider>
+            </CartProvider>
+          </LocaleProvider>
+        </ThemeProvider>
         <Toaster position={dir === "rtl" ? "top-left" : "top-right"} />
       </body>
     </html>

@@ -1,5 +1,7 @@
 import { BadgeCheck, HandCoins, Headset, Truck } from "lucide-react";
 
+import { Reveal } from "@/components/ui/reveal";
+
 export function WhyShopSection({
   dict,
 }: {
@@ -32,17 +34,16 @@ export function WhyShopSection({
         <p className="mt-2 text-muted-foreground">{dict.whyShopSubtitle}</p>
       </div>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item) => (
-          <div
-            key={item.title}
-            className="flex flex-col items-center gap-3 rounded-xl border bg-card p-6 text-center"
-          >
-            <span className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <item.icon className="size-5" />
-            </span>
-            <h3 className="text-sm font-semibold">{item.title}</h3>
-            <p className="text-xs text-muted-foreground">{item.desc}</p>
-          </div>
+        {items.map((item, index) => (
+          <Reveal key={item.title} delay={index * 70}>
+            <div className="flex flex-col items-center gap-3 rounded-xl border bg-card p-6 text-center shadow-card transition-shadow hover:shadow-premium">
+              <span className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <item.icon className="size-5" />
+              </span>
+              <h3 className="text-sm font-semibold">{item.title}</h3>
+              <p className="text-xs text-muted-foreground">{item.desc}</p>
+            </div>
+          </Reveal>
         ))}
       </div>
     </section>

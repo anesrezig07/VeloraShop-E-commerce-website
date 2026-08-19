@@ -351,7 +351,7 @@ export function CheckoutForm({ deliveryOptions }: CheckoutFormProps) {
       </div>
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-xl border bg-card p-5">
+        <div className="rounded-xl border bg-card p-5 shadow-card">
           <h2 className="font-heading text-lg font-bold">{dict.checkout.orderSummary}</h2>
 
           <ul className="mt-4 flex max-h-72 flex-col gap-3 overflow-y-auto">

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { Price } from "@/components/storefront/price";
+import { WishlistButton } from "@/components/storefront/wishlist-button";
 import { primaryImage, type CatalogProduct } from "@/lib/data/products";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -41,7 +42,7 @@ export function ProductCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-md",
+        "group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-premium",
         outOfStock && "opacity-90",
       )}
     >
@@ -55,13 +56,20 @@ export function ProductCard({
         <ProductImage src={image} alt={name} />
         <div className="absolute start-2 top-2 z-20 flex flex-col gap-1.5">
           {discount ? (
-            <Badge variant="destructive" className="pointer-events-none">
+            <Badge
+              className="pointer-events-none bg-sale text-sale-foreground"
+              variant="secondary"
+            >
               -{discount}%
             </Badge>
           ) : null}
           {outOfStock ? (
             <Badge variant="secondary" className="pointer-events-none">
               {dict.soldOut}
+            </Badge>
+          ) : lowStock ? (
+            <Badge variant="secondary" className="pointer-events-none opacity-90">
+              {dict.lowStock}
             </Badge>
           ) : null}
         </div>
@@ -72,6 +80,14 @@ export function ProductCard({
             </Badge>
           ) : null}
         </div>
+        <div className="absolute end-2 bottom-2 z-20 opacity-0 transition-all duration-300 group-hover:opacity-100 focus-within:opacity-100">
+          <WishlistButton
+            productId={product.id}
+            name={name}
+            slug={product.slug}
+            imageUrl={image}
+          />
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-1.5 p-3">
@@ -79,12 +95,21 @@ export function ProductCard({
           {name}
         </h3>
         <div className="flex items-baseline justify-between gap-2">
-          <Price value={effective} compareAt={discount ? price : null} locale={locale} size="sm" />
+          <Price
+            value={effective}
+            compareAt={discount ? price : null}
+            locale={locale}
+            size="sm"
+          />
         </div>
         <p
           className={cn(
             "text-xs",
-            outOfStock ? "text-destructive" : lowStock ? "text-amber-600" : "text-muted-foreground",
+            outOfStock
+              ? "text-destructive"
+              : lowStock
+                ? "text-amber-600 dark:text-amber-400"
+                : "text-muted-foreground",
           )}
         >
           {outOfStock

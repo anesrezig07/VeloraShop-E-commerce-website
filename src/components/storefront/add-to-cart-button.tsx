@@ -1,10 +1,11 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { useDictionary } from "@/i18n/client";
+import { useDictionary, useLocale } from "@/i18n/client";
 import { useCart, type AddItemInput } from "@/lib/cart/store";
 
 interface AddToCartButtonProps {
@@ -33,7 +34,9 @@ export function AddToCartButton({
   className,
 }: AddToCartButtonProps) {
   const dict = useDictionary();
+  const locale = useLocale();
   const { addItem } = useCart();
+  const router = useRouter();
 
   const availableStock = product.stock;
   const disabled = availableStock <= 0;
@@ -51,10 +54,13 @@ export function AddToCartButton({
       maxStock: availableStock,
     };
     addItem(input);
-    toast.success(
-      `${product.name}${variantName ? ` · ${variantName}` : ""}`,
-      { description: dict.common.addToCart },
-    );
+    toast.success(dict.common.addedToCart, {
+      description: `${product.name}${variantName ? ` · ${variantName}` : ""}`,
+      action: {
+        label: dict.common.viewCart,
+        onClick: () => router.push(`/${locale}/cart`),
+      },
+    });
   }
 
   return (

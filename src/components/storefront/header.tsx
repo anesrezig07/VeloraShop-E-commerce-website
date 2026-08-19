@@ -1,9 +1,13 @@
 import Link from "next/link";
 
+import { AnnouncementBar } from "@/components/storefront/announcement-bar";
 import { CartButton } from "@/components/storefront/cart-button";
+import { CategoriesMenu } from "@/components/storefront/categories-menu";
+import { HeaderShell } from "@/components/storefront/header-shell";
 import { LanguageSwitcher } from "@/components/storefront/language-switcher";
 import { MobileNav } from "@/components/storefront/mobile-nav";
 import { SearchBar } from "@/components/storefront/search-bar";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { getDictionary } from "@/i18n/server";
 import type { Category } from "@/lib/types";
@@ -20,14 +24,11 @@ export async function Header({
   const navLinks = [
     { href: `/${locale}`, label: dict.nav.home },
     { href: `/${locale}/products`, label: dict.nav.products },
-    { href: `/${locale}/categories`, label: dict.nav.categories },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
-      <div className="bg-primary px-4 py-1.5 text-center text-xs font-medium text-primary-foreground">
-        {dict.home.codTitle} · {dict.common.freeShipping}
-      </div>
+    <HeaderShell>
+      <AnnouncementBar />
 
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 lg:px-6">
         <div className="lg:hidden">
@@ -44,7 +45,7 @@ export async function Header({
           className="flex shrink-0 items-center gap-2 text-xl font-extrabold tracking-tight"
           aria-label="Velora Shop"
         >
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground shadow-card">
             V
           </span>
           <span>
@@ -66,16 +67,23 @@ export async function Header({
               {link.label}
             </Button>
           ))}
+          <CategoriesMenu
+            categories={categories.map((category) => ({
+              slug: category.slug,
+              name: locale === "ar" ? category.name_ar : category.name_fr,
+            }))}
+          />
         </nav>
 
         <div className="ms-auto flex items-center gap-2">
-          <SearchBar className="hidden w-56 md:block lg:w-64" />
+          <SearchBar className="hidden w-48 md:block lg:w-64" />
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
+          <ThemeToggle />
           <CartButton />
         </div>
       </div>
-    </header>
+    </HeaderShell>
   );
 }

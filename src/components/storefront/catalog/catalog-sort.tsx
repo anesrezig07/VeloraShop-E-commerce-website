@@ -12,6 +12,7 @@ import {
 import { useDictionary } from "@/i18n/client";
 
 const SORT_OPTIONS = [
+  { value: "featured", key: "sortFeatured" },
   { value: "newest", key: "sortNewest" },
   { value: "price-asc", key: "sortPriceAsc" },
   { value: "price-desc", key: "sortPriceDesc" },
@@ -19,14 +20,14 @@ const SORT_OPTIONS = [
   { value: "name-desc", key: "sortNameDesc" },
 ] as const;
 
-export function CatalogSort({ value = "newest" }: { value?: string }) {
+export function CatalogSort({ value = "featured" }: { value?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dict = useDictionary();
 
   function handleChange(next: string | null) {
     const params = new URLSearchParams(searchParams.toString());
-    if (next && next !== "newest") {
+    if (next && next !== "featured") {
       params.set("sort", next);
     } else {
       params.delete("sort");
