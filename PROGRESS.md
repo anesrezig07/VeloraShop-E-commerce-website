@@ -106,8 +106,16 @@ Production-grade COD-only e-commerce platform for Algeria.
 - Cleanup: removed dead `.theme-transition` CSS rule from `globals.css` (defined, never referenced).
 - Final validation: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ (34 routes).
 
+## Phase 11 — Dev-warning audit & fixes (done)
+Three dev-only warnings identified and fixed:
+1. **Base UI `nativeButton` warning** — 17 files converted from `Button render={<Link/>}` to `<Link className={buttonVariants(...)} />`. Pagination rewritten to conditionally render `<Link>` or `<button>`. `mobile-nav.tsx`: `<span>` SheetTrigger → `<button type="button">`.
+2. **LCP warnings (homepage hero + product page gallery)** — `priority` deprecated in Next 16; replaced with `loading="eager"` + `fetchPriority="high"` on hero (`src/components/storefront/hero.tsx`) and main gallery image (`src/components/storefront/product-gallery.tsx`). Product-page root cause: main gallery image (eager, src attr w=3840) and thumbnail #1 (lazy, same src attr w=3840) share identical `allImgs` key in dev-only LCP observer; lazy overwrites eager → false warning. Fixed by changing thumbnails from `fill` + `sizes="80px"` to explicit `width={80}` `height={80}` → distinct src URL (w=256) → no collision.
+3. **"Encountered a script tag" warning** — identified as dev-only React 19/Next.js streaming artifact. Fires on `notFound()` boundary renders (categories/[slug], checkout/success without params) and intermittently on categories/telephones (~75%). Not caused by app code (product page with JSON-LD `<script>` is clean; pages that warn have zero app scripts). Matches known Next.js issues (#53108, #64706). **Production build clean on all paths — not fixable from app code.**
+
+Files modified: `src/components/ui/button.tsx` (export), `src/components/storefront/hero.tsx`, `src/components/storefront/product-gallery.tsx`, `src/components/storefront/header.tsx`, `src/components/storefront/cart-button.tsx`, `src/components/storefront/section-header.tsx`, `src/components/storefront/cart/cart-content.tsx`, `src/components/storefront/catalog/pagination.tsx`, `src/components/storefront/mobile-nav.tsx`, `src/components/storefront/checkout/checkout-form.tsx`, `src/app/[locale]/(admin)/admin/page.tsx`, `src/app/[locale]/(admin)/admin/orders/[id]/page.tsx`, `src/app/[locale]/(shop)/checkout/page.tsx`, `src/app/[locale]/(shop)/checkout/success/page.tsx`, `src/app/[locale]/(shop)/products/page.tsx`, `src/app/[locale]/(shop)/categories/page.tsx`, `src/app/[locale]/(shop)/categories/[slug]/page.tsx`, `src/app/[locale]/not-found.tsx`.
+
 ## Status
-All phases 1–10 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
+All phases 1–11 complete. Storefront + checkout + admin are fully wired to the live Supabase project, deployed on Vercel (`https://velora-shop-e-commerce-website-five.vercel.app`). Recommended next: set `NEXT_PUBLIC_SITE_URL` as a Vercel env var, connect the custom domain if/when available, and change the admin password before real launch.
 
 ## Project state (as of last session)
-- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ · E2E 30/30 ✅ · redesign smoke tests ✅.
+- Verified: `npx tsc --noEmit` ✅ · `npm run lint` ✅ · `npm run build` ✅ (34 routes) · dev console clean (0 warnings) on `/fr`, `/ar`, `/fr/products/*`, `/fr/categories`, `/fr/cart`, `/fr/checkout`, `/fr/admin/login` · production (`next start`) clean on all paths.
